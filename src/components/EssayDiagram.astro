@@ -1,0 +1,303 @@
+---
+interface Props {
+  type: 'waves' | 'apis' | 'disposable' | 'architecture' | 'residue' | 'neurosymbolic';
+  context?: 'slab' | 'article';
+}
+
+const { type, context = 'article' } = Astro.props;
+const uid = `diag-${type}-${context}`;
+
+const waves = [
+  {
+    num: '01',
+    name: 'Human to Chatbot',
+    status: 'Mature',
+    detail: 'Bounded support and Q&A inside a single brand channel. Clear user expectation, low protocol complexity.',
+  },
+  {
+    num: '02',
+    name: 'Agent Outbound to Human',
+    status: 'Scaling',
+    detail: 'Automated voice and messaging initiated by businesses. Familiar channels, rising pressure on verification and consent.',
+  },
+  {
+    num: '03',
+    name: 'Agents on Human Channels',
+    status: 'Breaking now',
+    detail: 'Personal agents use email, WhatsApp, and phone lines built for people. Neither side reliably knows if the other end is human or software.',
+  },
+  {
+    num: '04',
+    name: 'Machine to Machine',
+    status: 'Missing',
+    detail: 'Direct structured negotiation with verifiable identity, authority limits, and enforceable commitments across the long tail.',
+  },
+];
+---
+
+{type === 'waves' && context === 'slab' && (
+  <div class="wave-schematic" data-wave-widget={uid}>
+    <div class="wave-schematic-head">
+      <span class="wave-schematic-title">Four Parallel Waves of Agent Traffic</span>
+      <span class="wave-schematic-title">Select layer</span>
+    </div>
+    <div class="wave-rows" role="tablist" aria-label="Agent traffic waves">
+      {waves.map((w, idx) => (
+        <button
+          type="button"
+          class={`wave-row ${idx === 2 ? 'active' : ''}`}
+          data-wave-btn
+          data-detail={w.detail}
+          aria-selected={idx === 2 ? 'true' : 'false'}
+        >
+          <span class="wave-num">{w.num}</span>
+          <span class="wave-name">{w.name}</span>
+          <span class="wave-status">{w.status}</span>
+        </button>
+      ))}
+    </div>
+    <div class="wave-detail" data-wave-detail>
+      {waves[2].detail}
+    </div>
+  </div>
+)}
+
+{type === 'waves' && context === 'article' && (
+  <figure class="diagram-figure">
+    <div class="wave-schematic" data-wave-widget={uid}>
+      <div class="wave-schematic-head">
+        <span class="wave-schematic-title">Four Parallel Waves of Agent Traffic</span>
+        <span class="wave-schematic-title">Select layer</span>
+      </div>
+      <div class="wave-rows" role="tablist" aria-label="Agent traffic waves">
+        {waves.map((w, idx) => (
+          <button
+            type="button"
+            class={`wave-row ${idx === 2 ? 'active' : ''}`}
+            data-wave-btn
+            data-detail={w.detail}
+            aria-selected={idx === 2 ? 'true' : 'false'}
+          >
+            <span class="wave-num">{w.num}</span>
+            <span class="wave-name">{w.name}</span>
+            <span class="wave-status">{w.status}</span>
+          </button>
+        ))}
+      </div>
+      <div class="wave-detail" data-wave-detail>
+        {waves[2].detail}
+      </div>
+    </div>
+    <figcaption class="diagram-caption">Figure: Communication layers stack rather than replace one another. Select any wave to inspect where current infrastructure holds or breaks.</figcaption>
+  </figure>
+)}
+
+{type === 'apis' && (
+  <figure class="diagram-figure">
+    <div class="diagram-frame">
+      <svg viewBox="0 0 800 260" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Primitives versus provider authority boundary in API design">
+        <rect x="20" y="24" width="330" height="212" fill="#091529" stroke="#1E3A66" stroke-width="1.2" />
+        <rect x="20" y="24" width="330" height="36" fill="#0E2242" />
+        <text x="38" y="47" fill="#67A4FF" font-family="Geist Mono, monospace" font-size="11" font-weight="600">CALLER + CODING MODEL</text>
+        <text x="38" y="88" fill="#F1F6FF" font-family="Geist, sans-serif" font-size="15" font-weight="600">Composable Primitives</text>
+        <text x="38" y="112" fill="#98B2D4" font-family="Geist, sans-serif" font-size="12.5">Models write integration code reliably when</text>
+        <text x="38" y="130" fill="#98B2D4" font-family="Geist, sans-serif" font-size="12.5">building blocks are clear and stable.</text>
+        <rect x="38" y="152" width="142" height="30" fill="#050B16" stroke="#284A80" />
+        <text x="50" y="171" fill="#00E5FF" font-family="Geist Mono, monospace" font-size="11">create_workspace()</text>
+        <rect x="190" y="152" width="142" height="30" fill="#050B16" stroke="#284A80" />
+        <text x="206" y="171" fill="#00E5FF" font-family="Geist Mono, monospace" font-size="11">add_users()</text>
+        <text x="38" y="212" fill="#6780A3" font-family="Geist Mono, monospace" font-size="10.5">GLUE ABSTRACTION: LOW VALUE</text>
+
+        <line x1="400" y1="16" x2="400" y2="244" stroke="#00E5FF" stroke-width="1.5" stroke-dasharray="4 4" />
+        <rect x="364" y="114" width="72" height="28" fill="#00E5FF" />
+        <text x="400" y="132" text-anchor="middle" fill="#040914" font-family="Geist Mono, monospace" font-size="10" font-weight="700">BOUNDARY</text>
+
+        <rect x="450" y="24" width="330" height="212" fill="#0A1B36" stroke="#00E5FF" stroke-width="1.2" />
+        <rect x="450" y="24" width="330" height="36" fill="#0E2952" />
+        <text x="468" y="47" fill="#00E5FF" font-family="Geist Mono, monospace" font-size="11" font-weight="600">PROVIDER AUTHORITY &amp; PRIVATE DATA</text>
+        <text x="468" y="88" fill="#FFFFFF" font-family="Geist, sans-serif" font-size="15" font-weight="600">Justified High-Level APIs</text>
+        <text x="468" y="112" fill="#A6C0DB" font-family="Geist, sans-serif" font-size="12.5">Keep abstraction where the provider holds</text>
+        <text x="468" y="130" fill="#A6C0DB" font-family="Geist, sans-serif" font-size="12.5">information or authority the caller lacks.</text>
+        <rect x="468" y="152" width="294" height="30" fill="rgba(0,229,255,0.08)" stroke="rgba(0,229,255,0.45)" />
+        <text x="480" y="171" fill="#F4F8FC" font-family="Geist Mono, monospace" font-size="11">routing + live cost + fraud + opt-outs</text>
+        <text x="468" y="212" fill="#00E5FF" font-family="Geist Mono, monospace" font-size="10.5">CAPABILITY ABSTRACTION: HIGH VALUE</text>
+      </svg>
+    </div>
+    <figcaption class="diagram-caption">Figure: Separate convenience wrappers from abstractions backed by private provider state or compliance authority.</figcaption>
+  </figure>
+)}
+
+{type === 'disposable' && (
+  <figure class="diagram-figure">
+    <div class="diagram-frame">
+      <svg viewBox="0 0 800 250" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Persistent intent and tests containing disposable AI-generated implementations">
+        <rect x="20" y="24" width="240" height="202" fill="#0A1B36" stroke="#00E5FF" stroke-width="1.2" />
+        <text x="38" y="54" fill="#00E5FF" font-family="Geist Mono, monospace" font-size="10.5">PERSISTENT ASSETS</text>
+        <rect x="38" y="72" width="204" height="38" fill="rgba(0,229,255,0.08)" stroke="rgba(0,229,255,0.35)" />
+        <text x="50" y="95" fill="#FFFFFF" font-family="Geist, sans-serif" font-size="13" font-weight="500">1. Explicit Intent &amp; Specs</text>
+        <rect x="38" y="122" width="204" height="38" fill="rgba(0,229,255,0.08)" stroke="rgba(0,229,255,0.35)" />
+        <text x="50" y="145" fill="#FFFFFF" font-family="Geist, sans-serif" font-size="13" font-weight="500">2. Stable Interface Contracts</text>
+        <rect x="38" y="172" width="204" height="38" fill="rgba(0,229,255,0.08)" stroke="rgba(0,229,255,0.35)" />
+        <text x="50" y="195" fill="#FFFFFF" font-family="Geist, sans-serif" font-size="13" font-weight="500">3. Behavioral Test Suite</text>
+
+        <line x1="260" y1="125" x2="328" y2="125" stroke="#00E5FF" stroke-width="2" />
+        <polygon points="328,120 338,125 328,130" fill="#00E5FF" />
+        <text x="296" y="114" text-anchor="middle" fill="#00E5FF" font-family="Geist Mono, monospace" font-size="10">GENERATE</text>
+
+        <rect x="344" y="42" width="210" height="166" fill="#091529" stroke="#3B82F6" stroke-width="1.5" stroke-dasharray="5 4" />
+        <text x="362" y="72" fill="#67A4FF" font-family="Geist Mono, monospace" font-size="10.5">DISPOSABLE LAYER</text>
+        <text x="362" y="102" fill="#F1F6FF" font-family="Geist, sans-serif" font-size="15" font-weight="600">Implementation Code</text>
+        <text x="362" y="126" fill="#98B2D4" font-family="Geist, sans-serif" font-size="12.5">Regenerated on demand when</text>
+        <text x="362" y="144" fill="#98B2D4" font-family="Geist, sans-serif" font-size="12.5">requirements or models change.</text>
+        <text x="362" y="182" fill="#6780A3" font-family="Geist Mono, monospace" font-size="10.5">BYPRODUCT, NOT ASSET</text>
+
+        <line x1="554" y1="125" x2="612" y2="125" stroke="#67A4FF" stroke-width="1.5" />
+        <polygon points="612,120 622,125 612,130" fill="#67A4FF" />
+
+        <rect x="626" y="54" width="154" height="142" fill="#0D2140" stroke="#284A80" />
+        <text x="642" y="84" fill="#00E5FF" font-family="Geist Mono, monospace" font-size="10.5">VERIFICATION</text>
+        <text x="642" y="112" fill="#FFFFFF" font-family="Geist, sans-serif" font-size="14" font-weight="600">Coverage Review</text>
+        <text x="642" y="136" fill="#98B2D4" font-family="Geist, sans-serif" font-size="12">Verify edge cases,</text>
+        <text x="642" y="154" fill="#98B2D4" font-family="Geist, sans-serif" font-size="12">constraints, and</text>
+        <text x="642" y="172" fill="#98B2D4" font-family="Geist, sans-serif" font-size="12">clean boundaries.</text>
+      </svg>
+    </div>
+    <figcaption class="diagram-caption">Figure: When code is cheap to regenerate, engineering effort moves into contracts, behavioral tests, and containment boundaries.</figcaption>
+  </figure>
+)}
+
+{type === 'architecture' && (
+  <figure class="diagram-figure">
+    <div class="diagram-frame">
+      <svg viewBox="0 0 800 260" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Decoupled mobile applications communicating with standalone components over an internal messaging bus">
+        <rect x="30" y="22" width="220" height="52" fill="#091529" stroke="#284A80" stroke-width="1.2" />
+        <text x="140" y="45" text-anchor="middle" fill="#F1F6FF" font-family="Geist, sans-serif" font-size="13.5" font-weight="600">Product App A</text>
+        <text x="140" y="63" text-anchor="middle" fill="#6780A3" font-family="Geist Mono, monospace" font-size="10">FLUTTER SINGLE CODEBASE</text>
+
+        <rect x="290" y="22" width="220" height="52" fill="#091529" stroke="#284A80" stroke-width="1.2" />
+        <text x="400" y="45" text-anchor="middle" fill="#F1F6FF" font-family="Geist, sans-serif" font-size="13.5" font-weight="600">Product App B</text>
+        <text x="400" y="63" text-anchor="middle" fill="#6780A3" font-family="Geist Mono, monospace" font-size="10">FLUTTER SINGLE CODEBASE</text>
+
+        <rect x="550" y="22" width="220" height="52" fill="#091529" stroke="#284A80" stroke-width="1.2" />
+        <text x="660" y="45" text-anchor="middle" fill="#F1F6FF" font-family="Geist, sans-serif" font-size="13.5" font-weight="600">Product App C</text>
+        <text x="660" y="63" text-anchor="middle" fill="#6780A3" font-family="Geist Mono, monospace" font-size="10">FLUTTER SINGLE CODEBASE</text>
+
+        <line x1="140" y1="74" x2="140" y2="112" stroke="#00E5FF" stroke-width="1.5" />
+        <line x1="400" y1="74" x2="400" y2="112" stroke="#00E5FF" stroke-width="1.5" />
+        <line x1="660" y1="74" x2="660" y2="112" stroke="#00E5FF" stroke-width="1.5" />
+
+        <rect x="30" y="112" width="740" height="40" fill="#0D264A" stroke="#00E5FF" stroke-width="1.2" />
+        <text x="400" y="137" text-anchor="middle" fill="#00E5FF" font-family="Geist Mono, monospace" font-size="12" letter-spacing="1.5">INTERNAL MESSAGING BUS · EXPLICIT CONTRACTS</text>
+
+        <line x1="155" y1="152" x2="155" y2="188" stroke="#00E5FF" stroke-width="1.5" />
+        <line x1="400" y1="152" x2="400" y2="188" stroke="#00E5FF" stroke-width="1.5" />
+        <line x1="645" y1="152" x2="645" y2="188" stroke="#00E5FF" stroke-width="1.5" />
+
+        <rect x="30" y="188" width="230" height="52" fill="#0A1F3D" stroke="#00E5FF" stroke-width="1.2" />
+        <text x="145" y="211" text-anchor="middle" fill="#FFFFFF" font-family="Geist, sans-serif" font-size="13.5" font-weight="600">Authentication Component</text>
+        <text x="145" y="229" text-anchor="middle" fill="#00E5FF" font-family="Geist Mono, monospace" font-size="10">CONFIGURABLE PER BRAND</text>
+
+        <rect x="285" y="188" width="230" height="52" fill="#091529" stroke="#284A80" stroke-width="1.2" />
+        <text x="400" y="211" text-anchor="middle" fill="#F1F6FF" font-family="Geist, sans-serif" font-size="13.5" font-weight="600">Payments &amp; Account Core</text>
+        <text x="400" y="229" text-anchor="middle" fill="#6780A3" font-family="Geist Mono, monospace" font-size="10">INDEPENDENT RELEASES</text>
+
+        <rect x="540" y="188" width="230" height="52" fill="#091529" stroke="#284A80" stroke-width="1.2" />
+        <text x="655" y="211" text-anchor="middle" fill="#F1F6FF" font-family="Geist, sans-serif" font-size="13.5" font-weight="600">Shared Feature Modules</text>
+        <text x="655" y="229" text-anchor="middle" fill="#6780A3" font-family="Geist Mono, monospace" font-size="10">ZERO CROSS-APP QUEUES</text>
+      </svg>
+    </div>
+    <figcaption class="diagram-caption">Figure: Moving shared capabilities into bounded components behind an internal bus removes cross-team release bottlenecks.</figcaption>
+  </figure>
+)}
+
+{type === 'residue' && (
+  <figure class="diagram-figure">
+    <div class="diagram-frame">
+      <svg viewBox="0 0 800 220" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="How public residue flows into LLM synthesis and vendor selection">
+        <rect x="20" y="34" width="225" height="152" fill="#091529" stroke="#284A80" stroke-width="1.2" />
+        <text x="36" y="60" fill="#67A4FF" font-family="Geist Mono, monospace" font-size="10.5">01 · PUBLIC RESIDUE</text>
+        <text x="36" y="88" fill="#F1F6FF" font-family="Geist, sans-serif" font-size="13">• API documentation clarity</text>
+        <text x="36" y="112" fill="#F1F6FF" font-family="Geist, sans-serif" font-size="13">• Working code examples</text>
+        <text x="36" y="136" fill="#F1F6FF" font-family="Geist, sans-serif" font-size="13">• Open-source &amp; forum traces</text>
+        <text x="36" y="160" fill="#F1F6FF" font-family="Geist, sans-serif" font-size="13">• Cross-source consistency</text>
+
+        <line x1="245" y1="110" x2="294" y2="110" stroke="#00E5FF" stroke-width="1.8" />
+        <polygon points="294,105 304,110 294,115" fill="#00E5FF" />
+
+        <rect x="308" y="34" width="204" height="152" fill="#0A1F3D" stroke="#00E5FF" stroke-width="1.2" />
+        <text x="326" y="60" fill="#00E5FF" font-family="Geist Mono, monospace" font-size="10.5">02 · MODEL SYNTHESIS</text>
+        <text x="326" y="92" fill="#FFFFFF" font-family="Geist, sans-serif" font-size="14.5" font-weight="600">No Vibes. Only Trace.</text>
+        <text x="326" y="118" fill="#A6C0DB" font-family="Geist, sans-serif" font-size="12.5">Stale signals cause</text>
+        <text x="326" y="136" fill="#A6C0DB" font-family="Geist, sans-serif" font-size="12.5">signal drift across coding</text>
+        <text x="326" y="154" fill="#A6C0DB" font-family="Geist, sans-serif" font-size="12.5">and buyer queries.</text>
+
+        <line x1="512" y1="110" x2="561" y2="110" stroke="#00E5FF" stroke-width="1.8" />
+        <polygon points="561,105 571,110 561,115" fill="#00E5FF" />
+
+        <rect x="575" y="34" width="205" height="152" fill="#0D2140" stroke="#284A80" stroke-width="1.2" />
+        <text x="592" y="60" fill="#00E5FF" font-family="Geist Mono, monospace" font-size="10.5">03 · DEBUG LOOP</text>
+        <text x="592" y="92" fill="#FFFFFF" font-family="Geist, sans-serif" font-size="14.5" font-weight="600">Inspect &amp; Fix Gaps</text>
+        <text x="592" y="118" fill="#98B2D4" font-family="Geist, sans-serif" font-size="12.5">Query models cold, trace</text>
+        <text x="592" y="136" fill="#98B2D4" font-family="Geist, sans-serif" font-size="12.5">why rivals get picked, and</text>
+        <text x="592" y="154" fill="#98B2D4" font-family="Geist, sans-serif" font-size="12.5">repair the missing trace.</text>
+      </svg>
+    </div>
+    <figcaption class="diagram-caption">Figure: Reputation becomes debuggable once you inspect the public residue models actually synthesize.</figcaption>
+  </figure>
+)}
+
+{type === 'neurosymbolic' && (
+  <figure class="diagram-figure">
+    <div class="diagram-frame">
+      <svg viewBox="0 0 800 230" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Neurosymbolic narrative engine combining neural pattern detection with symbolic policy rules">
+        <rect x="20" y="32" width="235" height="166" fill="#091529" stroke="#284A80" stroke-width="1.2" />
+        <text x="38" y="58" fill="#67A4FF" font-family="Geist Mono, monospace" font-size="10.5">NEURAL LAYER</text>
+        <text x="38" y="86" fill="#F1F6FF" font-family="Geist, sans-serif" font-size="15" font-weight="600">Pattern Recognition</text>
+        <text x="38" y="112" fill="#98B2D4" font-family="Geist, sans-serif" font-size="12.5">Detects behavioral patterns in</text>
+        <text x="38" y="130" fill="#98B2D4" font-family="Geist, sans-serif" font-size="12.5">real time across messy signals.</text>
+        <text x="38" y="168" fill="#6780A3" font-family="Geist Mono, monospace" font-size="10">REACTIVE · STATISTICAL</text>
+
+        <line x1="255" y1="115" x2="298" y2="115" stroke="#00E5FF" stroke-width="1.8" />
+        <polygon points="298,110 308,115 298,120" fill="#00E5FF" />
+
+        <rect x="312" y="32" width="235" height="166" fill="#0A1F3D" stroke="#00E5FF" stroke-width="1.2" />
+        <text x="330" y="58" fill="#00E5FF" font-family="Geist Mono, monospace" font-size="10.5">SYMBOLIC LAYER</text>
+        <text x="330" y="86" fill="#FFFFFF" font-family="Geist, sans-serif" font-size="15" font-weight="600">Explicit State &amp; Rules</text>
+        <text x="330" y="112" fill="#A6C0DB" font-family="Geist, sans-serif" font-size="12.5">Maps signals to journey stage,</text>
+        <text x="330" y="130" fill="#A6C0DB" font-family="Geist, sans-serif" font-size="12.5">business policy, and constraints.</text>
+        <text x="330" y="168" fill="#00E5FF" font-family="Geist Mono, monospace" font-size="10">PROACTIVE · EXPLAINABLE</text>
+
+        <line x1="547" y1="115" x2="590" y2="115" stroke="#00E5FF" stroke-width="1.8" />
+        <polygon points="590,110 600,115 590,120" fill="#00E5FF" />
+
+        <rect x="604" y="32" width="176" height="166" fill="#0D2140" stroke="#284A80" stroke-width="1.2" />
+        <text x="620" y="58" fill="#00E5FF" font-family="Geist Mono, monospace" font-size="10.5">OUTCOME</text>
+        <text x="620" y="86" fill="#FFFFFF" font-family="Geist, sans-serif" font-size="14.5" font-weight="600">Coherent Action</text>
+        <text x="620" y="112" fill="#98B2D4" font-family="Geist, sans-serif" font-size="12.5">Right nudge at the</text>
+        <text x="620" y="130" fill="#98B2D4" font-family="Geist, sans-serif" font-size="12.5">right stage, with an</text>
+        <text x="620" y="148" fill="#98B2D4" font-family="Geist, sans-serif" font-size="12.5">auditable reason.</text>
+      </svg>
+    </div>
+    <figcaption class="diagram-caption">Figure: Pairing neural pattern recognition with symbolic state logic produces proactive, explainable systems.</figcaption>
+  </figure>
+)}
+
+<script is:inline>
+  document.querySelectorAll('[data-wave-widget]').forEach((widget) => {
+    const buttons = widget.querySelectorAll('[data-wave-btn]');
+    const detail = widget.querySelector('[data-wave-detail]');
+    buttons.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        buttons.forEach((b) => {
+          b.classList.remove('active');
+          b.setAttribute('aria-selected', 'false');
+        });
+        btn.classList.add('active');
+        btn.setAttribute('aria-selected', 'true');
+        if (detail) {
+          detail.textContent = btn.getAttribute('data-detail') || '';
+        }
+      });
+    });
+  });
+</script>

@@ -1,0 +1,193 @@
+---
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description: string;
+  canonicalPath?: string;
+  ogType?: 'website' | 'article';
+  pubDate?: Date;
+  activeNav?: 'index' | 'writing' | 'about';
+  showProgress?: boolean;
+}
+
+const {
+  title,
+  description,
+  canonicalPath = Astro.url.pathname,
+  ogType = 'website',
+  pubDate,
+  activeNav,
+  showProgress = false,
+} = Astro.props;
+
+const siteUrl = 'https://jpvirolainen.com';
+const canonicalUrl = new URL(canonicalPath, siteUrl).toString();
+const fullTitle =
+  title === 'Juho-Pekka Virolainen' ? title : `${title} | Juho-Pekka Virolainen`;
+
+const personSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  '@id': `${siteUrl}/#person`,
+  name: 'Juho-Pekka Virolainen',
+  alternateName: ['JP Virolainen', 'JP'],
+  url: siteUrl,
+  jobTitle: 'SVP, Software Engineering',
+  worksFor: {
+    '@type': 'Organization',
+    name: 'Sinch',
+  },
+  address: {
+    '@type': 'PostalAddress',
+    addressCountry: 'FI',
+  },
+  sameAs: [
+    'https://www.linkedin.com/in/jpvirolainen/',
+    'https://github.com/jpvirolainen',
+  ],
+  knowsAbout: [
+    'Messaging Infrastructure',
+    'Mobile Marketing',
+    'Software Architecture',
+    'Engineering Leadership',
+    'AI Agents',
+    'API Design',
+  ],
+};
+
+const articleSchema =
+  ogType === 'article' && pubDate
+    ? {
+        '@context': 'https://schema.org',
+        '@type': 'BlogPosting',
+        headline: title,
+        description,
+        datePublished: pubDate.toISOString(),
+        url: canonicalUrl,
+        author: { '@id': `${siteUrl}/#person` },
+        publisher: { '@id': `${siteUrl}/#person` },
+        mainEntityOfPage: { '@type': 'WebPage', '@id': canonicalUrl },
+      }
+    : null;
+---
+
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalUrl} />
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      title="Juho-Pekka Virolainen"
+      href={`${siteUrl}/rss.xml`}
+    />
+
+    <script is:inline>
+      try {
+        const saved = localStorage.getItem('jpv-theme');
+        if (saved === 'light' || saved === 'dark') {
+          document.documentElement.setAttribute('data-theme', saved);
+        }
+      } catch (_) {}
+    </script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500&family=Geist:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content={ogType} />
+    <meta property="og:url" content={canonicalUrl} />
+    {pubDate && (
+      <meta property="article:published_time" content={pubDate.toISOString()} />
+    )}
+
+    <script type="application/ld+json" set:html={JSON.stringify(personSchema)} />
+    {articleSchema && (
+      <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
+    )}
+  </head>
+  <body>
+    <div class="top-accent-bar" aria-hidden="true"></div>
+    {showProgress && <div class="reading-progress" id="reading-progress" aria-hidden="true"></div>}
+
+    <header class="site-header">
+      <div class="header-inner">
+        <a class="site-brand" href="/">
+          <span class="brand-dot" aria-hidden="true"></span>
+          <span>Juho-Pekka Virolainen</span>
+        </a>
+        <nav class="site-nav" aria-label="Primary">
+          <a href="/" class={activeNav === 'index' ? 'active' : ''}>Index</a>
+          <a href="/writing/" class={activeNav === 'writing' ? 'active' : ''}>Writing</a>
+          <a href="/about/" class={activeNav === 'about' ? 'active' : ''}>About</a>
+          <a href="https://www.linkedin.com/in/jpvirolainen/" rel="me">LinkedIn</a>
+          <button type="button" class="theme-toggle" id="theme-toggle" aria-label="Toggle color theme">
+            Daylight
+          </button>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <slot />
+    </main>
+
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <span>Juho-Pekka Virolainen · Finland</span>
+        <div class="footer-links">
+          <a href="/writing/">Writing</a>
+          <a href="/about/">About</a>
+          <a href="https://github.com/jpvirolainen" rel="me">GitHub</a>
+          <a href="/rss.xml">RSS</a>
+          <a href="/llms.txt">llms.txt</a>
+        </div>
+      </div>
+    </footer>
+
+    <script is:inline>
+      const toggleBtn = document.getElementById('theme-toggle');
+      const syncToggleLabel = () => {
+        const current = document.documentElement.getAttribute('data-theme') || 'dark';
+        if (toggleBtn) {
+          toggleBtn.textContent = current === 'dark' ? 'Daylight' : 'Neon Dark';
+        }
+      };
+      syncToggleLabel();
+      toggleBtn?.addEventListener('click', () => {
+        const current = document.documentElement.getAttribute('data-theme') || 'dark';
+        const next = current === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', next);
+        try {
+          localStorage.setItem('jpv-theme', next);
+        } catch (_) {}
+        syncToggleLabel();
+      });
+    </script>
+
+    {showProgress && (
+      <script is:inline>
+        const bar = document.getElementById('reading-progress');
+        const updateBar = () => {
+          if (!bar) return;
+          const doc = document.documentElement;
+          const total = doc.scrollHeight - doc.clientHeight;
+          const pct = total > 0 ? Math.min(100, (window.scrollY / total) * 100) : 0;
+          bar.style.width = `${pct}%`;
+        };
+        window.addEventListener('scroll', updateBar, { passive: true });
+        updateBar();
+      </script>
+    )}
+  </body>
+</html>

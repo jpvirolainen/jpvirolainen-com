@@ -1,0 +1,149 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="About"
+  description="Background and career history of Juho-Pekka Virolainen, SVP of Software Engineering at Sinch and former CTO at IDT Corporation."
+  activeNav="about"
+>
+  <div class="container">
+    <header class="page-header">
+      <span class="eyebrow">Background</span>
+      <h1>Juho-Pekka Virolainen</h1>
+      <p>
+        Software engineer, former founder, and technology executive based in Finland, focused on
+        messaging infrastructure, platform architecture, and practical AI
+        systems.
+      </p>
+    </header>
+
+    <div class="about-grid">
+      <div class="about-prose">
+        <h2>Overview</h2>
+        <p>
+          I've spent over thirty years building software products and leading
+          engineering organizations across Finland and California. My work sits
+          at the intersection of hands-on systems architecture and large-scale
+          engineering transformation.
+        </p>
+        <p>
+          For the past quarter-century, most of my focus has been on messaging
+          infrastructure, mobile marketing, mobile communications, and
+          direct-to-consumer applications. Having seen both the startup and
+          corporate sides of the software business, the recurring problem has
+          been the same: untangling fragmented systems, aligning architecture
+          with how teams actually ship, and turning new technical capabilities
+          into reliable commercial infrastructure.
+        </p>
+
+        <h2>Current Role</h2>
+        <p>
+          Since July 2025, I've served as SVP of Software Engineering at Sinch,
+          leading the Messaging engineering organization with a focus on
+          platform architecture and engineering transformation.
+        </p>
+
+        <h2>Prior Work</h2>
+        <p>
+          I joined IDT Corporation in 2014 when IDT acquired HDmessaging, where
+          IDT had originally been one of our customers. At HDmessaging, we built
+          a white-label messaging platform for telecom carriers across the US,
+          Europe, and Asia, and created MagicWords, a patented in-chat
+          technology (US 20120239761, Linking Context-Based Information to Text
+          Messages) that turned words and concepts in live conversations into
+          contextual hyperlinks.
+        </p>
+        <p>
+          Over more than eleven years at IDT (2014-2025), I served as CTO across
+          Messaging, Direct-to-Consumer Products, and the AI Lab. As CTO of
+          Messaging (2014-2020), I expanded that stack into IDT's
+          next-generation messaging and calling platform used by millions, which
+          became the architectural foundation for IDT's broader consumer
+          business.
+        </p>
+        <p>
+          As CTO of the Direct-to-Consumer Products group (2020-2024), I led the
+          product and engineering transformation across messaging, calling,
+          payments, and money transfer. Moving from channel execution to a
+          shared platform, unifying separate native mobile apps onto Flutter
+          with modular components, and embedding AI into live pricing and
+          personalization helped scale the business to millions of users and
+          more than $2B in revenue on systems that continue to carry it.
+        </p>
+        <p>
+          In late 2023, I launched and led IDT's AI Lab (2023-2025) to bring
+          neural networks and generative AI into production rather than keeping
+          them as isolated experiments, building models for pricing, fraud,
+          sentiment, UX, and customer support as a structural part of how
+          products are designed.
+        </p>
+        <p>
+          Before the HDmessaging acquisition, I spent fourteen years co-founding
+          and serving as CTO at Silicon Valley mobile startups across messaging,
+          mobile marketing, and consumer apps, including Mobicus, Limbo,
+          Brightkite, and HDmessaging. Earlier work in the late 1990s included
+          rule-based CAD automation (Design++) and real-time website
+          personalization.
+        </p>
+      </div>
+
+      <aside class="career-rail" aria-label="Career timeline and focus">
+        <p class="career-rail-label">Career Timeline</p>
+        <ul class="career-list">
+          <li class="career-item">
+            <span class="career-period">2025-Now</span>
+            <div>
+              <span class="career-org">Sinch</span>
+              <span class="career-role">SVP, Software Engineering (Messaging)</span>
+            </div>
+          </li>
+          <li class="career-item">
+            <span class="career-period">2023-2025</span>
+            <div>
+              <span class="career-org">IDT Corporation</span>
+              <span class="career-role">CTO, AI Lab</span>
+            </div>
+          </li>
+          <li class="career-item">
+            <span class="career-period">2020-2024</span>
+            <div>
+              <span class="career-org">IDT Corporation</span>
+              <span class="career-role">CTO, Direct-to-Consumer Products</span>
+            </div>
+          </li>
+          <li class="career-item">
+            <span class="career-period">2014-2020</span>
+            <div>
+              <span class="career-org">IDT Corporation</span>
+              <span class="career-role">CTO, Messaging</span>
+            </div>
+          </li>
+          <li class="career-item">
+            <span class="career-period">2000-2014</span>
+            <div>
+              <span class="career-org">Mobicus · Limbo · Brightkite · HDmessaging</span>
+              <span class="career-role">Co-founder &amp; CTO</span>
+            </div>
+          </li>
+        </ul>
+
+        <p class="career-rail-label" style="margin-top: 2.5rem;">Core Focus</p>
+        <ul class="focus-list">
+          <li class="focus-item">
+            <strong>Engineering Transformation</strong>
+            <span>Decoupling legacy monoliths, removing team duplication, and matching operating tempo to architectural layers.</span>
+          </li>
+          <li class="focus-item">
+            <strong>Agent-Era Communications</strong>
+            <span>API boundaries, machine-to-machine identity, and trust when autonomous agents interact across human channels.</span>
+          </li>
+          <li class="focus-item">
+            <strong>Applied AI in Production</strong>
+            <span>Designing specifications, test suites, and hybrid architectures that contain probabilistic model behavior safely.</span>
+          </li>
+        </ul>
+      </aside>
+    </div>
+  </div>
+</BaseLayout>

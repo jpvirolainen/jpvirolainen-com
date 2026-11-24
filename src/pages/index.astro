@@ -1,0 +1,182 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import EssayDiagram from '../components/EssayDiagram.astro';
+
+const posts = (await getCollection('writing')).sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+);
+
+const flagship = posts.find((p) => p.data.flagship) ?? posts[0];
+const featured = posts
+  .filter((p) => p.data.featured && p.id !== flagship.id)
+  .slice(0, 3);
+
+const categories = [
+  'Agents, APIs & Discovery',
+  'Systems & Organizations',
+  'AI in Engineering',
+] as const;
+
+const readingTime = (body: string = '') => {
+  const words = body.trim().split(/\s+/).filter(Boolean).length;
+  return `${Math.max(2, Math.round(words / 220))} min`;
+};
+
+const formatShortDate = (date: Date) =>
+  date.toLocaleDateString('en-US', { year: 'numeric', month: 'short' });
+---
+
+<BaseLayout
+  title="Juho-Pekka Virolainen"
+  description="Software engineer, former founder, and technology executive in Finland. Writing on systems architecture, engineering organizations, and agent-era software."
+  activeNav="index"
+>
+  <div class="container">
+    <section class="hero">
+      <div>
+        <span class="eyebrow">Systems Architecture · Messaging · Applied AI</span>
+        <h1 class="hero-statement">
+          Juho-Pekka Virolainen
+        </h1>
+        <div class="hero-bio">
+          <p>
+            I'm a software engineer, former founder, and technology executive based in Finland,
+            with over thirty years building products and leading engineering
+            organizations across Finland and California. I've seen both the
+            startup and corporate sides of the software business, from
+            co-founding Silicon Valley companies to running global engineering
+            teams.
+          </p>
+          <p>
+            Most of my career has centered on messaging and calling
+            infrastructure, mobile marketing, and consumer platforms spanning
+            payments and money transfer. I write here occasionally about
+            architecture, transforming legacy engineering organizations, and
+            what happens when AI agents become both the builders and the users
+            of software.
+          </p>
+        </div>
+      </div>
+
+      <aside class="career-rail" aria-label="Career summary">
+        <p class="career-rail-label">Career</p>
+        <ul class="career-list">
+          <li class="career-item">
+            <span class="career-period">2025-Now</span>
+            <div>
+              <span class="career-org">Sinch</span>
+              <span class="career-role">SVP, Software Engineering (Messaging)</span>
+            </div>
+          </li>
+          <li class="career-item">
+            <span class="career-period">2014-2025</span>
+            <div>
+              <span class="career-org">IDT Corporation</span>
+              <span class="career-role">CTO across Messaging, DTC Products ($2B+ scale), and AI Lab</span>
+            </div>
+          </li>
+          <li class="career-item">
+            <span class="career-period">2000-2014</span>
+            <div>
+              <span class="career-org">Mobile Startups</span>
+              <span class="career-role">Co-founder &amp; CTO: Mobicus, Limbo, Brightkite, HDmessaging</span>
+            </div>
+          </li>
+        </ul>
+        <a class="rail-more" href="/about/">Full background &rarr;</a>
+      </aside>
+    </section>
+
+    <section class="slab-section" aria-label="Featured essay">
+      <div class="slab">
+        <div>
+          <span class="eyebrow">Featured Essay · {flagship.data.category}</span>
+          <h2 class="slab-title">
+            <a href={`/writing/${flagship.id}/`}>{flagship.data.title}</a>
+          </h2>
+          <p class="slab-desc">{flagship.data.description}</p>
+          <div class="slab-footer">
+            <span class="slab-meta">
+              {formatShortDate(flagship.data.pubDate)} · {readingTime(flagship.body)} read
+            </span>
+            <a class="slab-cta" href={`/writing/${flagship.id}/`}>Read essay &rarr;</a>
+          </div>
+        </div>
+
+        <EssayDiagram type="waves" context="slab" />
+      </div>
+    </section>
+
+    <section class="featured-section" aria-label="Selected essays">
+      <div class="section-bar">
+        <h2 class="section-title">Selected Essays</h2>
+        <a class="section-link" href="/writing/">All {posts.length} essays &rarr;</a>
+      </div>
+
+      <div class="featured-grid">
+        {featured.map((post) => (
+          <article class="featured-col">
+            <span class="eyebrow">{post.data.category}</span>
+            <h3>
+              <a href={`/writing/${post.id}/`}>{post.data.title}</a>
+            </h3>
+            <p>{post.data.description}</p>
+            <span class="mono-meta">
+              {formatShortDate(post.data.pubDate)} · {readingTime(post.body)} read
+            </span>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <section class="archive-section" aria-label="Complete writing archive">
+      <div class="filter-bar">
+        <div class="filter-tabs" role="tablist" aria-label="Filter by topic">
+          <button type="button" class="filter-tab active" data-filter="all">
+            All<span class="filter-count">{posts.length}</span>
+          </button>
+          {categories.map((cat) => {
+            const count = posts.filter((p) => p.data.category === cat).length;
+            return (
+              <button type="button" class="filter-tab" data-filter={cat}>
+                {cat}<span class="filter-count">{count}</span>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      <ul class="ledger" id="home-ledger">
+        {posts.map((post) => (
+          <li class="ledger-row" data-category={post.data.category}>
+            <a class="ledger-link" href={`/writing/${post.id}/`}>
+              <span class="ledger-title">{post.data.title}</span>
+              <span class="ledger-cat">{post.data.category}</span>
+              <time class="ledger-date" datetime={post.data.pubDate.toISOString()}>
+                {formatShortDate(post.data.pubDate)}
+              </time>
+              <span class="ledger-read">{readingTime(post.body)}</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </section>
+  </div>
+
+  <script is:inline>
+    const tabs = document.querySelectorAll('.filter-tab');
+    const rows = document.querySelectorAll('#home-ledger .ledger-row');
+    tabs.forEach((tab) => {
+      tab.addEventListener('click', () => {
+        const selected = tab.getAttribute('data-filter');
+        tabs.forEach((t) => t.classList.remove('active'));
+        tab.classList.add('active');
+        rows.forEach((row) => {
+          const cat = row.getAttribute('data-category');
+          row.style.display = selected === 'all' || cat === selected ? '' : 'none';
+        });
+      });
+    });
+  </script>
+</BaseLayout>

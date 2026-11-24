@@ -1,0 +1,84 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import EssayDiagram from '../../components/EssayDiagram.astro';
+
+export async function getStaticPaths() {
+  const posts = (await getCollection('writing')).sort(
+    (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+  );
+
+  return posts.map((post, index) => ({
+    params: { id: post.id },
+    props: {
+      post,
+      newerPost: index > 0 ? posts[index - 1] : null,
+      olderPost: index < posts.length - 1 ? posts[index + 1] : null,
+    },
+  }));
+}
+
+const { post, newerPost, olderPost } = Astro.props;
+const { Content } = await render(post);
+
+const formattedDate = post.data.pubDate.toLocaleDateString('en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+
+const words = (post.body || '').trim().split(/\s+/).filter(Boolean).length;
+const readMins = Math.max(2, Math.round(words / 220));
+---
+
+<BaseLayout
+  title={post.data.title}
+  description={post.data.description}
+  ogType="article"
+  pubDate={post.data.pubDate}
+  activeNav="writing"
+  showProgress={true}
+>
+  <article class="container article-wrap">
+    <header class="article-header">
+      <div class="article-meta-row">
+        <span class="eyebrow">{post.data.category}</span>
+        <span class="article-meta-sep">/</span>
+        <time class="mono-meta" datetime={post.data.pubDate.toISOString()}>
+          {formattedDate}
+        </time>
+        <span class="article-meta-sep">/</span>
+        <span class="mono-meta">{readMins} min read</span>
+      </div>
+      <h1 class="article-title">{post.data.title}</h1>
+      <p class="article-lead">{post.data.description}</p>
+    </header>
+
+    {post.data.diagram && (
+      <EssayDiagram type={post.data.diagram} context="article" />
+    )}
+
+    <div class="article-body">
+      <Content />
+    </div>
+
+    <nav class="article-nav" aria-label="Adjacent essays">
+      <div class="article-nav-item">
+        {newerPost && (
+          <a href={`/writing/${newerPost.id}/`}>
+            <span class="article-nav-label">&larr; Newer</span>
+            <span class="article-nav-title">{newerPost.data.title}</span>
+          </a>
+        )}
+      </div>
+      <div class="article-nav-item article-nav-item--next">
+        {olderPost && (
+          <a href={`/writing/${olderPost.id}/`}>
+            <span class="article-nav-label">Older &rarr;</span>
+            <span class="article-nav-title">{olderPost.data.title}</span>
+          </a>
+        )}
+      </div>
+    </nav>
+  </article>
+</BaseLayout>

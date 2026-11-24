@@ -1,0 +1,19 @@
+{
+  "name": "jpvirolainen-com",
+  "type": "module",
+  "version": "2.2.0",
+  "private": true,
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview"
+  },
+  "dependencies": {
+    "@astrojs/rss": "^4.0.9",
+    "@astrojs/sitemap": "^3.2.1",
+    "astro": "^7.4.13"
+  },
+  "devDependencies": {
+    "wrangler": "^4.168.0"
+  }
+}

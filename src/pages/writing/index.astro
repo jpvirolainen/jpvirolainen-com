@@ -1,0 +1,125 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const posts = (await getCollection('writing')).sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+);
+
+const categories = [
+  'Agents, APIs & Discovery',
+  'Systems & Organizations',
+  'AI in Engineering',
+] as const;
+
+const readingTime = (body: string = '') => {
+  const words = body.trim().split(/\s+/).filter(Boolean).length;
+  return `${Math.max(2, Math.round(words / 220))} min`;
+};
+
+const formatDate = (date: Date) =>
+  date.toLocaleDateString('en-US', { year: 'numeric', month: 'short' });
+---
+
+<BaseLayout
+  title="Writing"
+  description="Essays on systems architecture, engineering organizations, and agent-era software by Juho-Pekka Virolainen."
+  activeNav="writing"
+>
+  <div class="container">
+    <header class="page-header">
+      <span class="eyebrow">Archive · {posts.length} Essays</span>
+      <h1>Writing</h1>
+      <p>
+        Notes on software architecture, organizational bottlenecks, API design,
+        and practical AI systems.
+      </p>
+    </header>
+
+    <section class="archive-section">
+      <div class="filter-bar">
+        <div class="filter-tabs" role="tablist" aria-label="Filter essays">
+          <button type="button" class="filter-tab active" data-filter="all">
+            All<span class="filter-count">{posts.length}</span>
+          </button>
+          {categories.map((cat) => {
+            const count = posts.filter((p) => p.data.category === cat).length;
+            return (
+              <button type="button" class="filter-tab" data-filter={cat}>
+                {cat}<span class="filter-count">{count}</span>
+              </button>
+            );
+          })}
+        </div>
+
+        <input
+          type="search"
+          id="archive-search"
+          class="search-input"
+          placeholder="Search essays..."
+          aria-label="Search essays"
+        />
+      </div>
+
+      <ul class="ledger" id="writing-ledger">
+        {posts.map((post) => (
+          <li
+            class="ledger-row"
+            data-category={post.data.category}
+            data-search={`${post.data.title} ${post.data.description} ${post.data.category}`.toLowerCase()}
+          >
+            <a class="ledger-link" href={`/writing/${post.id}/`}>
+              <div>
+                <span class="ledger-title">{post.data.title}</span>
+                <span class="ledger-desc">{post.data.description}</span>
+              </div>
+              <span class="ledger-cat">{post.data.category}</span>
+              <time class="ledger-date" datetime={post.data.pubDate.toISOString()}>
+                {formatDate(post.data.pubDate)}
+              </time>
+              <span class="ledger-read">{readingTime(post.body)}</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+
+      <p class="empty-state" id="empty-state" hidden>
+        No essays match that filter.
+      </p>
+    </section>
+  </div>
+
+  <script is:inline>
+    const tabs = document.querySelectorAll('.filter-tab');
+    const search = document.getElementById('archive-search');
+    const rows = document.querySelectorAll('#writing-ledger .ledger-row');
+    const emptyState = document.getElementById('empty-state');
+    let activeFilter = 'all';
+
+    const applyFilters = () => {
+      const q = (search?.value || '').trim().toLowerCase();
+      let visible = 0;
+      rows.forEach((row) => {
+        const cat = row.getAttribute('data-category');
+        const haystack = row.getAttribute('data-search') || '';
+        const matchCat = activeFilter === 'all' || cat === activeFilter;
+        const matchQuery = !q || haystack.includes(q);
+        const show = matchCat && matchQuery;
+        row.style.display = show ? '' : 'none';
+        if (show) visible += 1;
+      });
+      if (emptyState) emptyState.hidden = visible > 0;
+    };
+
+    tabs.forEach((tab) => {
+      tab.addEventListener('click', () => {
+        activeFilter = tab.getAttribute('data-filter') || 'all';
+        tabs.forEach((t) => t.classList.remove('active'));
+        tab.classList.add('active');
+        applyFilters();
+      });
+    });
+
+    search?.addEventListener('input', applyFilters);
+  </script>
+</BaseLayout>
